@@ -16,16 +16,22 @@
   "permissions": [
     "identity"
   ],
-  // Adding https://www.gstatic.com/ to the external scripts authorized domains so we can import the firebase JS SDK and access the Realtime Database as well as Firebase Storage.
   "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
   "oauth2": {
-    // TODO(DEVELOPER): Change the line below to the OAuth Client ID you created as described in https://developer.chrome.com/apps/app_identity#google
-    "client_id": "<YOUR_CLIENT_ID>",
+    "client_id": "516776565265-oarun8jp14q1d77cka6cf8q8a7eel5bk.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/userinfo.email",
       "https://www.googleapis.com/auth/userinfo.profile"
     ]
   },
-  // TODO(DEVELOPER): Change the line below to your Chrome Extension's public key as described in https://developer.chrome.com/apps/app_identity#google
-  "key": "<YOUR_EXTENSION_PUBLIC_KEY>"
+  "key": "-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsc1FRJT3aC1O8iN9oL3i
+2ITFufjTBB5sMyqDc/XKQv56ymzMRXnK8DBHy4UB7VzUc0dQNQCwlbYfuKGw9d9P
+4yF66TtKjSf0rwiIFrKzy+7i/X42By4MWUnm3PWapP0tolodmNJbPtMAjfRNgxR4
+oFABWVu7e7P9l+ilRy4CVQaVvKjmRv9eEALkVD+4ySd24qTZDtZVUc/ZPTPK4ESa
+hUKt+D5QqoQdMuBbl4QKW12iiQZHfwLIpS/bHzOe/OULL/mKxAzm2Zn2FOhjkprz
+Ojh/cPK1uVBE3u0ofM2PSo9jThsw4T4bqJSro/DeoNbEWX3W4zHJ5uj4+2II4NOp
+uwIDAQAB
+-----END PUBLIC KEY-----
+"
 }
