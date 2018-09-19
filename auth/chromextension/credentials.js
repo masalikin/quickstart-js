@@ -1,8 +1,11 @@
 // Initialize Firebase
 var config = {
-  apiKey: 'AIzaSyAC0IKj0UcvKxlGjIvzFyyKvZofLh40uYk',
-  databaseURL: 'https://browser-dev.firebaseio.com',
-  storageBucket: 'browser-dev.appspot.com'
+    apiKey: 'AIzaSyAC0IKj0UcvKxlGjIvzFyyKvZofLh40uYk',
+    authDomain: 'browser-dev.firebaseapp.com',
+    databaseURL: 'https://browser-dev.firebaseio.com',
+    projectId: 'browser-dev',
+    storageBucket: 'browser-dev.appspot.com',
+    messagingSenderId: '516776565265'
 };
 firebase.initializeApp(config);
 
@@ -21,36 +24,47 @@ firebase.initializeApp(config);
  * When signed in, we also authenticate to the Firebase Realtime Database.
  */
 function initApp() {
-  // Listen for auth state changes.
-  // [START authstatelistener]
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      // User is signed in.
-      var displayName = user.displayName;
-      var email = user.email;
-      var emailVerified = user.emailVerified;
-      var photoURL = user.photoURL;
-      var isAnonymous = user.isAnonymous;
-      var uid = user.uid;
-      var providerData = user.providerData;
-      // [START_EXCLUDE]
-      document.getElementById('quickstart-button').textContent = 'Sign out';
-      document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
-      document.getElementById('quickstart-account-details').textContent = JSON.stringify(user, null, '  ');
-      // [END_EXCLUDE]
-    } else {
-      // Let's try to get a Google auth token programmatically.
-      // [START_EXCLUDE]
-      document.getElementById('quickstart-button').textContent = 'Sign-in with Google';
-      document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
-      document.getElementById('quickstart-account-details').textContent = 'null';
-      // [END_EXCLUDE]
-    }
-    document.getElementById('quickstart-button').disabled = false;
-  });
-  // [END authstatelistener]
+    // Listen for auth state changes.
+    // [START authstatelistener]
+    firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+            // User is signed in.
+            var displayName = user.displayName;
+            var email = user.email;
+            var emailVerified = user.emailVerified;
+            var photoURL = user.photoURL;
+            var isAnonymous = user.isAnonymous;
+            var uid = user.uid;
+            var providerData = user.providerData;
 
-  document.getElementById('quickstart-button').addEventListener('click', startSignIn, false);
+            accessDatabase(uid);
+
+            // [START_EXCLUDE]
+            document.getElementById('quickstart-button').textContent = 'Sign out';
+            document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
+            document.getElementById('quickstart-account-details').textContent =
+                "uid: " + uid + "\n"
+                + "displayName: " + displayName + "\n"
+                + "email: " + email + "\n"
+                + "emailVerified: " + emailVerified + "\n"
+                + "photoURL: " + photoURL + "\n"
+                + "isAnonymous: " + isAnonymous + "\n";
+
+            // [END_EXCLUDE]
+        } else {
+            // Let's try to get a Google auth token programmatically.
+            // [START_EXCLUDE]
+            document.getElementById('quickstart-button').textContent = 'Sign-in with Google';
+            document.getElementById('quickstart-sign-in-status').textContent = 'Signed out';
+            document.getElementById('quickstart-account-details').textContent = 'null';
+            document.getElementById('quickstart-bookmarks').textContent = 'null';
+            // [END_EXCLUDE]
+        }
+        document.getElementById('quickstart-button').disabled = false;
+    });
+    // [END authstatelistener]
+
+    document.getElementById('quickstart-button').addEventListener('click', startSignIn, false);
 }
 
 /**
@@ -58,41 +72,57 @@ function initApp() {
  * @param{boolean} interactive True if the OAuth flow should request with an interactive mode.
  */
 function startAuth(interactive) {
-  // Request an OAuth token from the Chrome Identity API.
-  chrome.identity.getAuthToken({interactive: !!interactive}, function(token) {
-    if (chrome.runtime.lastError && !interactive) {
-      console.log('It was not possible to get a token programmatically.');
-    } else if(chrome.runtime.lastError) {
-      console.error(chrome.runtime.lastError);
-    } else if (token) {
-      // Authorize Firebase with the OAuth Access Token.
-      var credential = firebase.auth.GoogleAuthProvider.credential(null, token);
-      firebase.auth().signInAndRetrieveDataWithCredential(credential).catch(function(error) {
-        // The OAuth token might have been invalidated. Lets' remove it from cache.
-        if (error.code === 'auth/invalid-credential') {
-          chrome.identity.removeCachedAuthToken({token: token}, function() {
-            startAuth(interactive);
-          });
+    // Request an OAuth token from the Chrome Identity API.
+    chrome.identity.getAuthToken({interactive: !!interactive}, function (token) {
+        if (chrome.runtime.lastError && !interactive) {
+            console.log('It was not possible to get a token programmatically.');
+        } else if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError);
+        } else if (token) {
+            // Authorize Firebase with the OAuth Access Token.
+            var credential = firebase.auth.GoogleAuthProvider.credential(null, token);
+            firebase.auth().signInAndRetrieveDataWithCredential(credential).catch(function (error) {
+                // The OAuth token might have been invalidated. Lets' remove it from cache.
+                if (error.code === 'auth/invalid-credential') {
+                    chrome.identity.removeCachedAuthToken({token: token}, function () {
+                        startAuth(interactive);
+                    });
+                }
+            });
+        } else {
+            console.error('The OAuth Token was null');
         }
-      });
-    } else {
-      console.error('The OAuth Token was null');
-    }
-  });
+    });
+}
+
+function accessDatabase(uid) {
+    let root = firebase.database();
+    let bookmarks = root.ref(uid + "/bookmarks");
+    let settings = root.ref(uid + "/settings");
+    let whitelist = root.ref(uid + "/whitelist");
+    bookmarks.on('value', function (dataSnapshot) {
+        document.getElementById('quickstart-bookmarks').textContent = JSON.stringify(dataSnapshot, null, '  ');
+    });
+    settings.on('value', function (dataSnapshot) {
+        let val = dataSnapshot.val();
+    });
+    whitelist.on('value', function (dataSnapshot) {
+        let val = dataSnapshot.val();
+    });
 }
 
 /**
  * Starts the sign-in process.
  */
 function startSignIn() {
-  document.getElementById('quickstart-button').disabled = true;
-  if (firebase.auth().currentUser) {
-    firebase.auth().signOut();
-  } else {
-    startAuth(true);
-  }
+    document.getElementById('quickstart-button').disabled = true;
+    if (firebase.auth().currentUser) {
+        firebase.auth().signOut();
+    } else {
+        startAuth(true);
+    }
 }
 
-window.onload = function() {
-  initApp();
+window.onload = function () {
+    initApp();
 };

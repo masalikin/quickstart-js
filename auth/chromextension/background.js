@@ -1,8 +1,11 @@
 // Initialize Firebase
 var config = {
-  apiKey: 'AIzaSyAC0IKj0UcvKxlGjIvzFyyKvZofLh40uYk',
-  databaseURL: 'https://browser-dev.firebaseio.com',
-  storageBucket: 'browser-dev.appspot.com'
+    apiKey: 'AIzaSyAC0IKj0UcvKxlGjIvzFyyKvZofLh40uYk',
+    authDomain: 'browser-dev.firebaseapp.com',
+    databaseURL: 'https://browser-dev.firebaseio.com',
+    projectId: 'browser-dev',
+    storageBucket: 'browser-dev.appspot.com',
+    messagingSenderId: '516776565265'
 };
 firebase.initializeApp(config);
 
