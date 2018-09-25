@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Firebase Auth in Chrome Extension Sample",
   "description": "This sample shows how to authorize Firebase in a Chrome extension using a Google account.",
-  "version": "2.1",
+  "version": "0.3",
   "icons": {
     "128": "firebase.png"
   },
@@ -14,7 +14,9 @@
     "page": "background.html"
   },
   "permissions": [
-    "identity"
+    "identity",
+    "bookmarks",
+    "storage"
   ],
   "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
   "oauth2": {
@@ -24,14 +26,5 @@
       "https://www.googleapis.com/auth/userinfo.profile"
     ]
   },
-  "key": "-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsc1FRJT3aC1O8iN9oL3i
-2ITFufjTBB5sMyqDc/XKQv56ymzMRXnK8DBHy4UB7VzUc0dQNQCwlbYfuKGw9d9P
-4yF66TtKjSf0rwiIFrKzy+7i/X42By4MWUnm3PWapP0tolodmNJbPtMAjfRNgxR4
-oFABWVu7e7P9l+ilRy4CVQaVvKjmRv9eEALkVD+4ySd24qTZDtZVUc/ZPTPK4ESa
-hUKt+D5QqoQdMuBbl4QKW12iiQZHfwLIpS/bHzOe/OULL/mKxAzm2Zn2FOhjkprz
-Ojh/cPK1uVBE3u0ofM2PSo9jThsw4T4bqJSro/DeoNbEWX3W4zHJ5uj4+2II4NOp
-uwIDAQAB
------END PUBLIC KEY-----
-"
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsc1FRJT3aC1O8iN9oL3i2ITFufjTBB5sMyqDc/XKQv56ymzMRXnK8DBHy4UB7VzUc0dQNQCwlbYfuKGw9d9P4yF66TtKjSf0rwiIFrKzy+7i/X42By4MWUnm3PWapP0tolodmNJbPtMAjfRNgxR4oFABWVu7e7P9l+ilRy4CVQaVvKjmRv9eEALkVD+4ySd24qTZDtZVUc/ZPTPK4ESahUKt+D5QqoQdMuBbl4QKW12iiQZHfwLIpS/bHzOe/OULL/mKxAzm2Zn2FOhjkprzOjh/cPK1uVBE3u0ofM2PSo9jThsw4T4bqJSro/DeoNbEWX3W4zHJ5uj4+2II4NOpuwIDAQAB"
 }

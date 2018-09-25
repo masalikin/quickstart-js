@@ -37,8 +37,6 @@ function initApp() {
             var uid = user.uid;
             var providerData = user.providerData;
 
-            accessDatabase(uid);
-
             // [START_EXCLUDE]
             document.getElementById('quickstart-button').textContent = 'Sign out';
             document.getElementById('quickstart-sign-in-status').textContent = 'Signed in';
@@ -92,22 +90,6 @@ function startAuth(interactive) {
         } else {
             console.error('The OAuth Token was null');
         }
-    });
-}
-
-function accessDatabase(uid) {
-    let root = firebase.database();
-    let bookmarks = root.ref(uid + "/bookmarks");
-    let settings = root.ref(uid + "/settings");
-    let whitelist = root.ref(uid + "/whitelist");
-    bookmarks.on('value', function (dataSnapshot) {
-        document.getElementById('quickstart-bookmarks').textContent = JSON.stringify(dataSnapshot, null, '  ');
-    });
-    settings.on('value', function (dataSnapshot) {
-        let val = dataSnapshot.val();
-    });
-    whitelist.on('value', function (dataSnapshot) {
-        let val = dataSnapshot.val();
     });
 }
 
