@@ -101,10 +101,7 @@ function doSingleBookmarksPush(uid, callback) {
     chrome.bookmarks.getTree(function (results) {
 
         const simpleBookmarks = [];
-        const topLevelNodes = results[0].children;
-        for (let i = 0; i < topLevelNodes.length; i++) {
-            readSubTree(topLevelNodes[i].children, simpleBookmarks);
-        }
+        readSubTree(results, simpleBookmarks);
 
         let bookmarks = getBookmarksFirebasePath(uid);
         bookmarks.set(simpleBookmarks, function () {
@@ -122,7 +119,7 @@ function readSubTree(subTree, simpleBookmarks) {
         const parentId = parseInt('parentId' in node ? node.parentId : -1);
         const url = 'url' in node ? node.url : "";
         const title = node.title;
-        const isFolder = ('children' in node ? node.children.length : 0) > 0;
+        const isFolder = ('children' in node && url === "");
         const simpleBookmark = new SimpleBookmark(id, parentId, url, title, isFolder);
         simpleBookmarks.push(simpleBookmark);
 
@@ -211,6 +208,13 @@ function createSingleBookmark(folders, simpleBookmark, callback) {
     let title = simpleBookmark.title;
     let url = simpleBookmark.url;
     let parentId = simpleBookmark.parentId;
+
+    if (id === 0 || parentId === 0) {
+        //ignoring top level folders
+        callback();
+        return;
+    }
+
     let parent = folders.get(parentId);
     if (!parent) {
         switch (parentId) {
