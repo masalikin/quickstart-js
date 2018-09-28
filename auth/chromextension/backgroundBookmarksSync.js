@@ -101,7 +101,7 @@ function doSingleBookmarksPush(uid, callback) {
     chrome.bookmarks.getTree(function (results) {
 
         const simpleBookmarks = [];
-        readSubTree(results, simpleBookmarks);
+        readSubTree(results[0].children, simpleBookmarks);
 
         let bookmarks = getBookmarksFirebasePath(uid);
         bookmarks.set(simpleBookmarks, function () {
